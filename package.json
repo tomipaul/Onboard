@@ -11,7 +11,9 @@
     "test": "NODE_ENV=test npm run db:migrate && mocha src/server/test/**  --require babel-polyfill --compilers js:babel-register --exit && npm run undo:migrate",
     "build:dist": "babel src -d dist",
     "db:migrate": "cd src/server && ../../node_modules/.bin/sequelize db:migrate",
-    "undo:migrate": "cd src/server && ../../node_modules/.bin/sequelize db:migrate:undo:all"
+    "undo:migrate": "cd src/server && ../../node_modules/.bin/sequelize db:migrate:undo:all",
+    "transpile": "babel src --out-dir dist --ignore server/tests/*.js",
+    "heroku-postbuild": "npm run transpile"
   },
   "repository": {
     "type": "git",
