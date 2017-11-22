@@ -1,16 +1,22 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
-  var Session = sequelize.define('Session', {
+  const Session = sequelize.define('Session', {
     name: DataTypes.STRING,
     userId: DataTypes.INTEGER,
     moduleId: DataTypes.INTEGER,
     challengeId: DataTypes.INTEGER
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
-    }
   });
+
+  Session.associate = (models) => {
+    Session.belongsTo(models.Challenge, {
+      foreignKey: 'challengeId',
+      onDelete: 'CASACADE'
+    });
+
+    Session.belongsToMany(models.User, {
+      foreignKey: 'userId',
+      through: 'UserSessions'
+    });
+  };
+
   return Session;
 };

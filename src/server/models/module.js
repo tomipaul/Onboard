@@ -1,13 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
-  var Module = sequelize.define('Module', {
+  const Module = sequelize.define('Module', {
     name: DataTypes.STRING,
-    totalDuration: DataTypes.DATE
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
-    }
+    totalDuration: DataTypes.INTEGER
   });
+
+  Module.associate = (models) => {
+    Module.hasMany(models.Challenge, {
+      foreignKey: 'moduleId',
+      onDelete: 'CASACADE'
+    });
+  };
+
   return Module;
 };

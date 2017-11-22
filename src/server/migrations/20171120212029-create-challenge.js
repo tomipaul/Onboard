@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Modules', {
+    return queryInterface.createTable('Challenges', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,7 +10,7 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      totalDuration: {
+      duration: {
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -24,6 +24,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Modules');
+    return queryInterface.dropTable('Challenges');
   }
 };

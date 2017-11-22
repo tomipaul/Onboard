@@ -13,20 +13,12 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING
   });
 
-  // User.associate = (models) => {
-  //   User.belongsToMany(models.Group, {
-  //     foreignKey: 'userId',
-  //     through: 'UserGroups',
-  //   });
-  //   User.belongsToMany(models.Message, {
-  //     foreignKey: 'userId',
-  //     through: 'ReadMessages'
-  //   });
-  //   User.belongsToMany(models.Notification, {
-  //     foreignKey: 'userId',
-  //     through: 'UserNotification'
-  //   });
-  // };
+  User.associate = (models) => {
+    User.belongsToMany(models.Session, {
+      foreignKey: 'userId',
+      through: 'UserSessions',
+    });
+  };
 
   User.beforeCreate((user) => {
     user.password = bcrypt.hashSync(user.password);
