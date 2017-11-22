@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node dist/server/app.js",
     "start:dev": "babel-watch src/server/app.js",
+    "transpile": "babel src --out-dir dist --ignore server/tests/*.js",
+    "heroku-postbuild": "npm run transpile",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "repository": {
@@ -28,6 +30,7 @@
   },
   "homepage": "https://github.com/tomipaul/Onboard#readme",
   "dependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
