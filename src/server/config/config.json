@@ -1,10 +1,7 @@
 {
   "development": {
-    "host": "localhost",
-    "database": "onboard_development",
-    "username": "postgres",
-    "password": "dafe",
-   "dialect": "postgres"
+    "dialect": "postgres",
+    "use_env_variable": "DATABASE_URL"
   },
   "test": {
     "dialect": "postgres",
