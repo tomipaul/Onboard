@@ -8,7 +8,7 @@
     "start:dev": "babel-watch src/server/app.js",
     "transpile": "babel src --out-dir dist --ignore server/tests/*.js",
     "heroku-postbuild": "npm run transpile",
-    "test": "NODE_ENV=test npm run db:migrate && mocha src/server/test/**  --require babel-polyfill --compilers js:babel-register && npm run undo:migrate",
+    "test": "NODE_ENV=test npm run db:migrate && mocha src/server/test/**  --require babel-polyfill --compilers js:babel-register --exit && npm run undo:migrate",
     "build:dist": "babel src -d dist",
     "db:migrate": "cd src/server && ../../node_modules/.bin/sequelize db:migrate",
     "undo:migrate": "cd src/server && ../../node_modules/.bin/sequelize db:migrate:undo:all"
