@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import winston from 'winston';
 
 dotenv.config();
-const app = express()
+const app = express();
 const port = process.env.PORT || 5000;
 winston.configure({
   transports: [

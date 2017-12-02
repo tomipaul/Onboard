@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASACADE'
     });
 
-    Session.belongsToMany(models.User, {
+    Session.belongsTo(models.User, {
       foreignKey: 'userId',
-      through: 'UserSessions'
+      onDelete: 'CASACADE'
     });
   };
 

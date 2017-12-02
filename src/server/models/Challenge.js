@@ -1,12 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
   const Challenge = sequelize.define('Challenge', {
     name: DataTypes.STRING,
-    duration: DataTypes.INTEGER
+    duration: DataTypes.INTEGER,
+    moduleId: DataTypes.INTEGER
   });
 
   Challenge.associate = (models) => {
-    Challenge.hasOne(models.Module, {
-      foreignKey: 'challengeId',
+    Challenge.belongsTo(models.Module, {
+      foreignKey: 'moduleId',
       onDelete: 'CASACADE'
     });
   };
