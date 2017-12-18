@@ -1,23 +1,22 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Sessions', {
+  up: (queryInterface, Sequelize) =>
+    queryInterface.createTable('Sessions', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        type: Sequelize.INTEGER
       },
       name: {
         type: Sequelize.STRING
       },
       userId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       moduleId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       challengeId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       createdAt: {
         allowNull: false,
@@ -27,9 +26,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
-  },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Sessions');
-  }
+    }),
+  down: queryInterface =>
+    queryInterface.dropTable('Sessions')
 };

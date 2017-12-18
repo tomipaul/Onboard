@@ -1,20 +1,32 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface, Sequelize) =>
     queryInterface.createTable('Users', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        unique: true,
+        validate: {
+          isUUID: {
+            args: 4,
+            msg: 'id must be uuid'
+          }
+        }
       },
       username: {
         type: Sequelize.STRING,
-        unique: true,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       email: {
         type: Sequelize.STRING,
-        unique: true
+        allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: {
+            msg: 'email is invalid',
+          }
+        }
       },
       password: {
         type: Sequelize.STRING,
@@ -28,9 +40,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
-  },
-  down: (queryInterface) => {
-    queryInterface.dropTable('Users');
-  }
+    }),
+  down: queryInterface => queryInterface.dropTable('Users')
 };
