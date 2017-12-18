@@ -5,9 +5,18 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    name: DataTypes.STRING,
-    duration: DataTypes.INTEGER,
-    moduleId: DataTypes.INTEGER
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    duration: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    moduleId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   });
 
   Challenge.associate = (models) => {

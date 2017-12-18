@@ -2,15 +2,46 @@ import bcrypt from 'bcrypt-nodejs';
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      unique: {
+        args: true,
+        msg: 'id already exists'
+      },
+      validate: {
+        isUUID: {
+          args: 4,
+          msg: 'id must be uuid'
+        }
+      }
+    },
     username: {
       type: DataTypes.STRING,
-      unique: true
+      allowNull: false,
+      unique: {
+        args: true,
+        msg: 'username is not available'
+      }
     },
     email: {
       type: DataTypes.STRING,
-      unique: true
+      allowNull: false,
+      unique: {
+        args: true,
+        msg: 'email already exists'
+      },
+      validate: {
+        isEmail: {
+          msg: 'email is invalid',
+        }
+      }
     },
-    password: DataTypes.STRING
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   });
 
   User.associate = (models) => {
@@ -30,5 +61,15 @@ module.exports = (sequelize, DataTypes) => {
     user.password = bcrypt.hashSync(user.password);
   });
 
+  User.prototype.verifyPassword = function verifyPassword(password) {
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(
+        password,
+        this.password,
+        (err, result) =>
+          ((err) ? reject(err) : resolve(result))
+      );
+    });
+  };
   return User;
 };

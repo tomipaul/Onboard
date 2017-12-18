@@ -1,7 +1,18 @@
 module.exports = (sequelize, DataTypes) => {
   const Module = sequelize.define('Module', {
-    name: DataTypes.STRING,
-    totalDuration: DataTypes.INTEGER
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    totalDuration: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   });
 
   Module.associate = (models) => {
