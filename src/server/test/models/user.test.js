@@ -1,14 +1,12 @@
 import should from 'should';
 import models from '../../models';
-import '../../app';
 
 describe('User Model:', () => {
   it('should be able to add a new user to the database', (done) => {
-    models.User.create(
-    {  
+    models.User.create({
       username: 'user',
       password: 'pass',
-      email: 'user@email.com' 
+      email: 'user@email.com'
     })
       .then((user) => {
         should.exist(user);

@@ -1,13 +1,12 @@
 import should from 'should';
 import models from '../../models';
-import '../../app';
 
 describe('Challenge Model:', () => {
   it('should be able to save a new challenge', (done) => {
-    models.Challenge.create(
-    {
+    models.Challenge.create({
       name: 'test challenge',
-      duration: 5
+      duration: 5,
+      moduleId: 12
     })
       .then((challenge) => {
         should.exist(challenge);

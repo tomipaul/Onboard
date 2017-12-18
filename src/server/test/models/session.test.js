@@ -1,11 +1,9 @@
 import should from 'should';
 import models from '../../models';
-import '../../app';
 
 describe('Session Model:', () => {
   it('should be able to save a new session', (done) => {
-    models.Session.create(
-    {
+    models.Session.create({
       name: 'test session',
       challengeId: 1,
       moduleId: 1,
