@@ -1,9 +1,8 @@
-import express from 'express';
 import dotenv from 'dotenv';
 import winston from 'winston';
+import server from './server';
 
 dotenv.config();
-const app = express();
 const port = process.env.PORT || 5000;
 winston.configure({
   transports: [
@@ -11,12 +10,8 @@ winston.configure({
   ]
 });
 
-app.get('*', (req, res) => {
-  res.status(200).send('Welcome to the onboard API');
-});
-
-app.listen(port, () => {
+server.listen(port, () => {
   winston.log('info', `Server started on ${port}`);
 });
 
-export default app;
+export default server;
