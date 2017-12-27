@@ -66,8 +66,8 @@ module.exports = (sequelize, DataTypes) => {
       bcrypt.compare(
         password,
         this.password,
-        (err, result) =>
-          ((err) ? reject(err) : resolve(result))
+        (error, result) =>
+          ((error) ? reject(error) : resolve(result))
       );
     });
   };

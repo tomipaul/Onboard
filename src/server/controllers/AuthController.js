@@ -21,9 +21,9 @@ class AuthController {
     return (req, res, next) => {
       try {
         validateSignupPayload(req.body);
-      } catch (err) {
-        err.code = 422;
-        return next(err);
+      } catch (error) {
+        error.code = 422;
+        return next(error);
       }
       const { username, email, password } = req.body;
       return models.User.create({ username, email, password })
@@ -31,7 +31,7 @@ class AuthController {
           req.user = extractUserInfo(user);
           return next();
         })
-        .catch(err => next(err));
+        .catch(error => next(error));
     };
   }
 
@@ -55,7 +55,6 @@ class AuthController {
                 return generateToken(user, rsaKey);
               }
               const error = new Error('Invalid Password');
-              error.code = 422;
               throw error;
             })
             .then((token) => {
@@ -70,12 +69,14 @@ class AuthController {
                 message: 'Authentication Successful'
               });
             }))
-        .catch((err) => {
-          if (err.code !== 500) {
-            err.code = 401;
-            err.message = 'Authentication failed, check provided credentials';
+        .catch((error) => {
+          if (!error.code) {
+            error.code = 401;
           }
-          return next(err);
+          if (!error.message) {
+            error.message = 'Authentication failed, check provided credentials';
+          }
+          return next(error);
         });
     };
   }

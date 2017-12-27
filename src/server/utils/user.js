@@ -35,10 +35,12 @@ export const getUser = searchOptions =>
       })
   )
     .then(user => user)
-    .catch((err) => {
-      const error = (err instanceof models.sequelize.EmptyResultError) ?
-        (err.code = 404, err.message = 'User not found', err) :
-        (err.code = 500, err.message = 'Something went wrong', err);
-      throw error;
+    .catch((error) => {
+      const finalError = (
+        error instanceof models.sequelize.EmptyResultError
+      ) ?
+        (error.code = 404, error.message = 'User not found', error) :
+        (error.code = 500, error.message = 'Something went wrong', error);
+      throw finalError;
     });
 

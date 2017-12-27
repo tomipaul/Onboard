@@ -22,8 +22,8 @@ export const generateToken = (user, rsaKey, expiresIn = '30d') =>
       auth,
       rsaKey,
       options,
-      (err, token) =>
-        ((err) ? reject(err) : resolve(token))
+      (error, token) =>
+        ((error) ? reject(error) : resolve(token))
     );
   });
 
@@ -47,8 +47,8 @@ export const verifyToken = (token, rsaKey, maxAge = '30d') =>
       token,
       rsaKey,
       options,
-      (err, decoded) =>
-        ((err) ? reject(err) : resolve(decoded))
+      (error, decoded) =>
+        ((error) ? reject(error) : resolve(decoded))
     );
   });
 

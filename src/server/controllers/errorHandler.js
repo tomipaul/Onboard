@@ -9,14 +9,16 @@ import models from '../models';
 export default function errorHandler() {
   // error handlers must always take four arguments
   // eslint-disable-next-line
-  return (err, req, res, next) => {
+  return (error, req, res, next) => {
     const { sequelize } = models;
-    if (err instanceof sequelize.ValidationError) {
-      err.code = 422;
-    } else {
-      err.code = 500;
-      err.message = 'Exception 500! Operation failed.';
+    if (!error.code) {
+      if (error instanceof sequelize.ValidationError) {
+        error.code = 422;
+      } else {
+        error.code = 500;
+        error.message = 'Exception 500! Operation failed.';
+      }
     }
-    return res.status(err.code).json({ error: err.message });
+    return res.status(error.code).json({ error: error.message });
   };
 }
