@@ -1,5 +1,6 @@
 import {
   generateToken,
+  verifyToken,
   validateSignupPayload
 } from '../utils/auth';
 import { extractUserInfo, getUser } from '../utils/user';
@@ -38,7 +39,7 @@ class AuthController {
   /**
    * Authenticate a user with username and password
    * @method
-   * @memberof UserController
+   * @memberof AuthController
    * @static
    * @return {function} Express middleware function that
    * validates username and password  and sends token to client
@@ -77,6 +78,56 @@ class AuthController {
             error.message = 'Authentication failed, check provided credentials';
           }
           return next(error);
+        });
+    };
+  }
+
+  /**
+   * Get token sent in client request
+   * @method
+   * @memberof AuthController
+   * @static
+   * @return {function} Express middleware function that gets
+   * authorization token from request body, query, header or cookies
+   * and passes request to next middleware function.
+   */
+  static getClientToken() {
+    return (req, res, next) => {
+      const token = req.get('Authorization') || req.body.token
+      || req.cookies.token || req.query.token;
+      if (!token) {
+        const err = new Error('No Access token provided!');
+        err.code = 401;
+        return next(err);
+      }
+      const matched = /^Bearer (\S+)$/.exec(token);
+      req.token = (matched) ? matched[1] : token;
+      return next();
+    };
+  }
+
+  /**
+   * Verify user token and authorize user to access requested route
+   * @method
+   * @memberof AuthController
+   * @static
+   * @return {function} Express middleware function that
+   * validates user token and pass request to route handler
+   */
+  static authorizeUser() {
+    return (req, res, next) => {
+      const rsaKey = process.env.PUBLIC_KEY;
+      return verifyToken(req.token, rsaKey)
+        .then((decodedPayload) => {
+          const userInfo = extractUserInfo(decodedPayload);
+          req.userId = userInfo.id;
+          req.username = userInfo.username;
+          return next();
+        })
+        .catch(() => {
+          const err = new Error('Invalid token sent in request');
+          err.code = 401;
+          return next(err);
         });
     };
   }
