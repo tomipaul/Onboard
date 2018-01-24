@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import authRouter from './routes/authRoutes';
 import errorHandler from './controllers/errorHandler';
 import AuthController from './controllers/AuthController';
+import userRouter from './routes/userRoutes';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(
   AuthController.getClientToken(),
   AuthController.authorizeUser()
 );
+app.use(userRouter);
 app.use(errorHandler());
 
 const server = http.createServer(app);
