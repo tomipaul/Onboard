@@ -17,13 +17,9 @@ app.get('/', (req, res) => {
   res.status(200).send('Welcome to the onboard API');
 });
 app.use(authRouter);
-app.use(
-  AuthController.getClientToken(),
-  AuthController.authorizeUser()
-);
+app.use(AuthController.isAuthenticated());
 app.use(userRouter);
 app.use(errorHandler());
 
 const server = http.createServer(app);
 export default server;
-

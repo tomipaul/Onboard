@@ -59,11 +59,33 @@ export const verifyToken = (token, rsaKey, maxAge = '30d') =>
  * @returns {undefined}
  */
 export const validateSignupPayload = (payload) => {
+  const error = new Error();
+  error.message = {};
   ['username', 'email', 'password'].forEach((item) => {
     const prop = payload[item];
     if (!prop || /^\s+$/.test(prop)) {
-      const msg = `Invalid request, a valid ${item} is required`;
-      throw new Error(msg);
+      error.message[item] = `Invalid request, a valid ${item} is required`;
+      error.code = 422;
     }
   });
+  if (Object.keys(error.message).length) throw error;
+};
+
+/**
+ * Validate signin request payload
+ * @function validateSignupPayload
+ * @param {object} payload
+ * @returns {undefined}
+ */
+export const validateSigninPayload = (payload) => {
+  const error = new Error();
+  error.message = {};
+  ['userIdentifier', 'password'].forEach((item) => {
+    const prop = payload[item];
+    if (!prop || /^\s+$/.test(prop)) {
+      error.message[item] = `Invalid request, a valid ${item} is required`;
+      error.code = 422;
+    }
+  });
+  if (Object.keys(error.message).length) throw error;
 };

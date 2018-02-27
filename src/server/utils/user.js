@@ -1,5 +1,7 @@
 import models from '../models';
 
+const { Op } = models.sequelize;
+
 /**
  * Extract user properties from object
  * @function extractUserInfo
@@ -19,18 +21,32 @@ export const extractUserInfo = (userObject) => {
   };
 };
 
-export const getUser = searchOptions =>
+/**
+ * Queries the database for a user object
+ * @function extractUserInfo
+ * @param {object} queryOptions
+ * @returns {object} found user object if found or error details
+ * if not found
+ */
+export const getUser = queryOptions =>
   (
     (Object.prototype.hasOwnProperty
-      .call(searchOptions, 'id')) ?
+      .call(queryOptions, 'id')) ?
       models.User.findById(
-        searchOptions.id,
+        queryOptions.id,
         {
           rejectOnEmpty: true
         }
       ) :
       models.User.findOne({
-        where: searchOptions,
+        where: (queryOptions.userIdentifier) ?
+          {
+            [Op.or]: [
+              { username: queryOptions.userIdentifier },
+              { email: queryOptions.userIdentifier }
+            ]
+          } :
+          queryOptions,
         rejectOnEmpty: true
       })
   )
@@ -43,4 +59,3 @@ export const getUser = searchOptions =>
         (error.code = 500, error.message = 'Something went wrong', error);
       throw finalError;
     });
-
