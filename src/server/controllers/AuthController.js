@@ -1,7 +1,6 @@
 import {
   generateToken,
-  validateSignupPayload,
-  validateSigninPayload,
+  validator,
   verifyToken
 } from '../utils/auth';
 import { extractUserInfo, getUser } from '../utils/user';
@@ -25,7 +24,8 @@ class AuthController {
   static createUser() {
     return (req, res, next) => {
       try {
-        validateSignupPayload(req.body);
+        const enumArray = ['username', 'email', 'password'];
+        validator(enumArray, req.body);
       } catch (error) {
         return next(error);
       }
@@ -60,7 +60,8 @@ class AuthController {
   static loginUser() {
     return (req, res, next) => {
       try {
-        validateSigninPayload(req.body);
+        const enumArray = ['userIdentifier', 'password'];
+        validator(enumArray, req.body);
       } catch (error) {
         return next(error);
       }
@@ -124,13 +125,13 @@ class AuthController {
             return next();
           })
           .catch((error) => {
-            error.message = 'You need to be logged in first';
+            error.message = 'Invalid token sent in request';
             error.code = 401;
             return next(error);
           });
       }
       const error = new Error();
-      error.message = 'Access denied! Please create an account or login first!';
+      error.message = 'Invalid signature in authorization header!';
       error.code = 403;
       return next(error);
     };
