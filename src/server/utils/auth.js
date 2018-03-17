@@ -55,32 +55,14 @@ export const verifyToken = (token, rsaKey, maxAge = '30d') =>
 /**
  * Validate signup request payload
  * @function validateSignupPayload
+ * @param {array} enumArray
  * @param {object} payload
  * @returns {undefined}
  */
-export const validateSignupPayload = (payload) => {
+export const validator = (enumArray, payload) => {
   const error = new Error();
   error.message = {};
-  ['username', 'email', 'password'].forEach((item) => {
-    const prop = payload[item];
-    if (!prop || /^\s+$/.test(prop)) {
-      error.message[item] = `Invalid request, a valid ${item} is required`;
-      error.code = 422;
-    }
-  });
-  if (Object.keys(error.message).length) throw error;
-};
-
-/**
- * Validate signin request payload
- * @function validateSignupPayload
- * @param {object} payload
- * @returns {undefined}
- */
-export const validateSigninPayload = (payload) => {
-  const error = new Error();
-  error.message = {};
-  ['userIdentifier', 'password'].forEach((item) => {
+  enumArray.forEach((item) => {
     const prop = payload[item];
     if (!prop || /^\s+$/.test(prop)) {
       error.message[item] = `Invalid request, a valid ${item} is required`;

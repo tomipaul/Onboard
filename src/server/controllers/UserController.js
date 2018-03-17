@@ -1,4 +1,7 @@
 import models from '../models';
+import {
+  validator,
+} from '../utils/auth';
 
 export const saveSession = () =>
   (req, res) => {
@@ -16,6 +19,32 @@ export const saveSession = () =>
           session
         });
       });
+  };
+
+/**
+   * Resets a users password
+   * @method
+   * @return {function} Function handling updating of password
+   */
+export const resetPassword = () =>
+  (req, res, next) => {
+    try {
+      const enumArray = ['newPassword'];
+      validator(enumArray, req.body);
+    } catch (error) {
+      return next(error);
+    }
+
+    const { email } = req.user;
+    return models.User.update({
+      password: req.body.newPassword
+    }, {
+      where: {
+        email
+      }
+    }).then(() => res.status(200)
+      .json({ message: 'Password change succesful' }))
+      .catch(error => next(error));
   };
 
 export default saveSession;
