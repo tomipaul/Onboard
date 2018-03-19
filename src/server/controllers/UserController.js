@@ -1,5 +1,10 @@
 import models from '../models';
-import { validator } from '../utils/auth';
+import {
+  validator,
+} from '../utils/auth';
+import {
+  getUser,
+} from '../utils/user';
 
 /**
  * Save a user's session
@@ -65,11 +70,6 @@ export const modifyProfile = () =>
       error.code = 400;
       throw error;
     }
-    try {
-      validator(updateFields, req.body);
-    } catch (error) {
-      return next(error);
-    }
     return models.User.update(req.body, {
       where: {
         id: req.user.id
@@ -87,3 +87,40 @@ export const modifyProfile = () =>
       });
   };
 
+/**
+ * Change user password
+ * @function changePassword
+ * @returns {function} express route handler
+ */
+export const changePassword = () =>
+  (req, res, next) => {
+    const updateFields = ['oldPassword', 'newPassword'];
+    try {
+      validator(updateFields, req.body);
+    } catch (error) {
+      return next(error);
+    }
+    const { oldPassword, newPassword } = req.body;
+    return getUser({ id: req.user.id })
+      .then(user =>
+        user.verifyPassword(oldPassword)
+          .then((isValid) => {
+            if (isValid) {
+              return user.update({
+                password: newPassword
+              }, {
+                fields: ['password']
+              });
+            }
+            const error = new Error('Invalid old password');
+            throw error;
+          })
+          .then(() =>
+            res.json({
+              message: 'Password change succesful'
+            })))
+      .catch((error) => {
+        error.code = 400;
+        next(error);
+      });
+  };
