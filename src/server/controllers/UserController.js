@@ -7,6 +7,26 @@ import {
 } from '../utils/user';
 
 /**
+ * Get all saved sessions of a user
+ * @function getSessions
+ * @returns {function} express route handler
+ */
+export const getSessions = () =>
+  (req, res, next) =>
+    models.Session.findAll({
+      where: {
+        userId: req.user.id
+      },
+      attributes: {
+        exclude: ['userId']
+      }
+    }).then(sessions =>
+      res.json({
+        sessions
+      }))
+      .catch(error => next(error));
+
+/**
  * Save a user's session
  * @function saveSession
  * @returns {function} express route handler
