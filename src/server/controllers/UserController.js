@@ -38,7 +38,7 @@ export const saveSession = () =>
       name,
       moduleId,
       challengeId,
-      userId: req.userId
+      userId: req.user.id
     };
     return models.Session.create(payload)
       .then((session) => {
