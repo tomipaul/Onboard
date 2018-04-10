@@ -144,3 +144,41 @@ export const changePassword = () =>
         next(error);
       });
   };
+
+/**
+ * Update a user's session
+ * @function updateSession
+ * @returns {function} express route handler
+ */
+export const updateSession = () =>
+  (req, res, next) => {
+    const { sessionId } = req.params;
+    const fields = Object.keys(req.body);
+    const updateFields = ['name', 'moduleId', 'challengeId']
+      .filter(field => fields.includes(field));
+    if (!updateFields.length) {
+      const error = new Error('Invalid request, no valid fields');
+      error.code = 400;
+      throw error;
+    }
+    try {
+      validator(updateFields, req.body);
+    } catch (error) {
+      return next(error);
+    }
+    return models.Session.update(req.body, {
+      where: {
+        id: sessionId
+      },
+      fields: updateFields
+    })
+      .then(() =>
+        res.json({
+          message: 'Session updated successfully',
+          updatedFields: req.body
+        }))
+      .catch((err) => {
+        err.code = 400;
+        next(err);
+      });
+  };
