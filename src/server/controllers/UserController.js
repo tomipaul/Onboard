@@ -32,7 +32,12 @@ export const getSessions = () =>
  * @returns {function} express route handler
  */
 export const saveSession = () =>
-  (req, res) => {
+  (req, res, next) => {
+    try {
+      validator(['name', 'moduleId', 'challengeId'], req.body);
+    } catch (error) {
+      return next(error);
+    }
     const { name, moduleId, challengeId } = req.body;
     const payload = {
       name,
@@ -89,6 +94,11 @@ export const modifyProfile = () =>
       const error = new Error('Invalid request, no valid fields');
       error.code = 400;
       throw error;
+    }
+    try {
+      validator(updateFields, req.body);
+    } catch (error) {
+      return next(error);
     }
     return models.User.update(req.body, {
       where: {
