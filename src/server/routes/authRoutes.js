@@ -12,4 +12,9 @@ authRouter.post(
   AuthController.loginUser()
 );
 
+authRouter.post(
+  '/api/user/password/forgot',
+  AuthController.forgotPassword()
+);
+
 export default authRouter;
