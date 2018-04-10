@@ -1,3 +1,4 @@
+import sgMail from '@sendgrid/mail';
 import {
   generateToken,
   validator,
@@ -134,6 +135,52 @@ class AuthController {
       error.message = 'Invalid signature in authorization header!';
       error.code = 403;
       return next(error);
+    };
+  }
+
+  /**
+   * Authenticates user token
+   * @method
+   * @memberof AuthController
+   * @static
+   * @return {function} Express middleware function that calls the
+   * next method after authentication has been completed
+   */
+  static forgotPassword() {
+    return (req, res, next) => {
+      try {
+        const enumArray = ['email'];
+        validator(enumArray, req.body);
+      } catch (error) {
+        return next(error);
+      }
+
+      return getUser({ email: req.body.email })
+        .then(user => generateToken(user, rsaKey))
+        .then((token) => {
+          sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+          const msg = {
+            to: req.body.email,
+            from: 'onboard.noreply@gmail.com',
+            subject: 'Onboard - Reset Password',
+            text: 'Click to reset email',
+            html: `<a href="${req.headers.origin}/password/reset/?tok=${token}">Click here</a>`,
+          };
+          sgMail.send(msg, (error) => {
+            if (error) {
+              error.message = 'Mail sending failed!';
+              error.code = 401;
+              return next(error);
+            }
+            return res.status(200).json({
+              message: 'Successful. Check your mail for link to reset passowrd!'
+            });
+          });
+        })
+        .catch((error) => {
+          error.message = 'Account with this email does not exist';
+          return next(error);
+        });
     };
   }
 }
