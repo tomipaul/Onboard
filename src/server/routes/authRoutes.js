@@ -13,7 +13,7 @@ authRouter.post(
 );
 
 authRouter.post(
-  '/api/user/password/forgot',
+  '/api/user/password/recover',
   AuthController.forgotPassword()
 );
 

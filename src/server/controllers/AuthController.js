@@ -139,12 +139,12 @@ class AuthController {
   }
 
   /**
-   * Authenticates user token
+   * Handles sending reset password link to users email
    * @method
    * @memberof AuthController
    * @static
-   * @return {function} Express middleware function that calls the
-   * next method after authentication has been completed
+   * @return {function} Returns success message on successfully sending reset password email
+   * or throws error on failure
    */
   static forgotPassword() {
     return (req, res, next) => {
