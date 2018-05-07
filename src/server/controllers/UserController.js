@@ -192,3 +192,33 @@ export const updateSession = () =>
         next(err);
       });
   };
+
+/**
+ * Delete a user's session
+ * @function deleteSession
+ * @returns {function} express route handler
+ */
+export const deleteSession = () =>
+  (req, res, next) => {
+    const { sessionId } = req.params;
+
+    models.Session.findById(sessionId)
+      .then((session) => {
+        if (!session) {
+          const error = new Error();
+          error.code = 404;
+          error.message = 'Session not found';
+          throw error;
+        } else if (session.userId !== req.user.id) {
+          const error = new Error();
+          error.code = 401;
+          error.message = 'You do not have permission to delete this session';
+          throw error;
+        }
+        session.destroy();
+        return res.status(200).json({
+          message: 'Session deleted successfully'
+        });
+      })
+      .catch(error => next(error));
+  };
